@@ -35,11 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()// à eviter en prod
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/api/messages").permitAll()// permet pour tout le monde
                 .antMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
                 .anyRequest().hasRole("USER")// ça permet de bloquer les urls restants
-                .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     @Bean
